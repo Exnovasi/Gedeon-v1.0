@@ -1,0 +1,204 @@
+<div class="view-container padding-t-20">
+  	<div class="col-xs-12 col-sm-12 col-md-6 margin-t-b-20-sm-down">
+		<!-- listado de usuarios -->
+		<div class="content-container-inner animated fadeIn">
+	        <!-- barra de progreso circular -->
+	        <!-- encabezado de listas -->
+	        <div class="form-header bg-3">
+	        	<div class="col-xs-12">
+		        	<h4 class="fc-W margin-t-b-5">Indicadores creados</h4>
+	        	</div>
+		        <div class="col-xs-12 col-sm-6">
+		        	<select ng-disabled="waitLoadAreas || waitLoadPrograms" class="form-control white med-40" id="role" ng-options="line.name for line in lines" ng-model="$parent.indicatorsLineSelected" ng-change="indicatorsLoadAreasForLine($parent.indicatorsLineSelected)">
+				      <option value="">Seleccione una línea</option> 
+				    </select>
+		        </div>
+		        <div class="col-xs-12 col-sm-6">
+		        	<select ng-disabled="waitLoadAreas || waitLoadPrograms" class="form-control white med-40" id="role" ng-options="area.name for area in programsAreas" ng-model="$parent.programsAreaSelected" ng-change="$parent.loadIndicatorForArea(programsAreaSelected)">
+				      <option value="">Seleccione un área</option> 
+				    </select>
+		        </div>
+	        </div>
+	      	<div class="form-body no-padding-l-r panel-scroll-vertical-600-no-padding pos-relative">
+	      		<!-- barra de progreso circular -->
+		        <div  ng-if="waitLoadAreas || waitLoadPrograms" class="animate-if-panel progress-circular-panel center-items bg-W animated fadeIn">
+		          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+		        </div>
+	      		<!-- lista de todos las Áreas existentes -->
+	      		<div ng-if="indicatorsNoContentMsg && totalIndicatorsWeight != 0" class="no-content-msg animated fadeIn"><i class="mdi mdi-information-outline"></i> [[indicatorsNoContentMsg]]</div>
+	      		<!-- <div ng-if="areas.length < 1 && indicatorsLineSelected" class="no-content-msg"><i class="mdi mdi-information-outline"></i> En "[[indicatorsLineSelected.name]]" No hay ninguna área creada</div>
+	      		<div ng-if="areas.length > 1 || !indicatorsLineSelected || !programsAreaSelected" class="no-content-msg"><i class="mdi mdi-information-outline"></i> [[indicatorsLineSelected ? 'Por favor seleccione un área' : 'Por favor seleccione una línea']]</div> -->
+	      		<div ng-repeat="program in indicator | orderBy: '-id'" class="card-user-container">
+	      			<!-- popUp confirmar -->
+			        <div ng-if="waitConfirmDeleteProgram == program" class="animated zoomInUp popup-delete-user">
+			        	<!-- barra de progreso circular -->
+				        <div ng-if="waitDeleteProgram" class="animate-if-panel progress-circular-panel center-items bg-W opacity-05">
+				          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+				        </div>
+			        	<div class="container-inner">
+			        		<p class="popup-text"><i class="mdi mdi-alert"></i> [[popupTextProgram]]
+			        			<button type="button" class="close" ng-click="closeWaitDeleteProgram(program)" tabindex="0" aria-hidden="false">
+							        <span aria-hidden="true">×</span>
+							        <span class="sr-only">Close</span>
+							    </button>
+			        		</p>
+				          	<div ng-if="!reassignProjects" class="form-group col-xs-6">
+						        <input ng-model="program.deletePassword" type="password" class="form-control white" id="deletePassword2" placeholder="Password">
+					        </div>
+					        <div ng-if="reassignProjects" class="form-group col-xs-6">
+					        	<select class="form-control white" id="role" ng-model="program.reassignIndicatorId">
+							      <option value="">Reasignar programa a otro indicador</option> <!-- not selected / blank option -->
+							      <option ng-repeat="opt in programsAux" value="[[opt.id]]">[[opt.name]]</option> <!-- interpolation -->
+							    </select>
+					        </div>
+					        <div  class="form-group col-xs-6">
+						       <button class="wid-100 btn btn-lg btn-primary color-4 fs-xs-30" ng-disabled="!program.deletePassword && program.reassignProgramId == null" ng-click="deleteIndicator(program)">[[reassignProjects ? 'Reasignar programas' :'Eliminar indicador' ]]</button>
+					        </div>
+			        	</div>
+				        <div class="overlay"></div>
+			        </div>
+			        <!-- popUp confirmar -->
+	      			<div class="col-xs-12">
+	      				<div class="users-info-panel">
+	      					<div class="col-xs-3 col-sm-2">
+	      						<div class="lines-weight-container">
+	      							[[program.weight]]%
+	      						</div>
+	      					</div>
+	      					<div class="col-xs-9 col-sm-10">
+			      				<h3 class="no-margin fc-3">[[program.name]]</h3>
+			      				<p class="fc-silver no-margin"><i class="mdi mdi-crosshairs-gps fc-success"></i> [[program.goal]]</p>
+	      					</div>
+	      				</div>
+	      				<div class="actions-users">
+	      					<div class="actions-users-button btn btn-default" tooltip-popup-delay='1000' tooltip='Eliminar' tooltip-placement="left" ng-click="confirmDeleteIndicator(program)">
+	      						<i class="mdi mdi-delete"></i>	
+	      					</div>
+	      					<div class="actions-users-button btn btn-default" tooltip-popup-delay='1000' tooltip='Editar' tooltip-placement="left" ng-click="loadIndicatorForm(program)">
+	      						<i class="mdi mdi-border-color"></i>
+	      					</div>
+	      				</div>
+	      			</div>
+	      		</div>	       
+	    	</div>
+		</div>
+	</div>
+	<div class="col-xs-12 col-sm-12 col-md-6 margin-t-b-20-sm-down">
+	    <md-tabs  md-selected="selectedTabPrograms" md-border-bottom md-autoselect class="tabs-config menu-hidden">
+		    <md-tab label="Crear Indicadores">
+		        <!-- fomrulario creacion de Indicadores -->
+				<div  class="content-container-inner">
+				    <form class="wid-100">
+				        <!-- barra de progreso circular -->
+				        <div ng-if="waitCreateProgram" class="animate-if-panel progress-circular-panel center-items bg-W opacity-05">
+				          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+				        </div>
+				        <!-- encabezado de formulario -->
+				        <div class="form-header bg-3">
+					        <h4 class="fc-W text-initial margin-t-b-5">Crear indicador [[programsAreaSelected.name ? 'en ' + programsAreaSelected.name :'' ]]</h4>
+					        <h5 class="fc-W hidden-xs text-initial margin-t-b-5">Por favor ingrese la siguiente información</h5>
+				        </div>
+				      	<div class="form-body pos-relative inline-b wid-100 margin-top-big">
+				      		<!-- barra de progreso circular -->
+					        <div  ng-if="waitLoadAreas || waitLoadPrograms" class="animate-if-panel progress-circular-panel center-items bg-W animated fadeIn">
+					          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+					        </div>
+					        <!-- mensajes de contenido -->
+				      		<div ng-if="programs.length >= 0 && !programsAreaSelected || totalIndicatorsWeight <= 0" class="no-content-msg"><i class="mdi mdi-information-outline"></i> [[indicatorsNoContentMsg]] </div>
+							<alert ng-if="createMessagePrograms" type="danger" class="animated fadeInUp alert no-fixed" close="$parent.createMessagePrograms = null">
+								<strong>
+								  <UL type = disk >
+								    <LI class="text-initial" ng-repeat="msg in createMessagePrograms">[[msg]]
+								  </UL>
+								</strong>
+							</alert>
+							<!-- alerta de exito -->
+							<alert ng-if="createSuccessPrograms" class="animated fadeInUp alert no-fixed" type="success" close="$parent.createSuccessPrograms = null">
+								[[createSuccessPrograms]]
+							</alert>			      		
+							<div class="col-xs-12" ng-if="!indicatorsNoContentMsg || (programsAreaSelected && totalIndicatorsWeight > 0)">
+						        <div class="form-group col-xs-12 col-md-6">
+						          <input ng-model="indicatorForm.name" type="text" class="form-control white" id="name" placeholder="Nombre del indicador">
+						        </div>
+						        <div class="form-group col-xs-12 col-md-6">
+						          <input ng-model="indicatorForm.goal" type="text" class="form-control white" id="goal" placeholder="Meta del indicador">
+						        </div>
+						        <div class="form-group col-xs-12">
+						        	<label  class="fc-silver">Peso del indicador: [[indicatorForm.weight]]%</label>
+						        	<md-slider ng-if="totalIndicatorsWeight" flex class="md-primary" md-discrete ng-model="indicatorForm.weight" step="1" min="0" max="[[totalIndicatorsWeight]]" ng-disabled="totalIndicatorsWeight == 0" aria-label="rating">
+     								 </md-slider>
+						          <!-- <input ng-model="programForm.weight" type="text" class="form-control white" id="user" placeholder="Peso de la Programa"> -->
+						        </div>									        
+						        <div class="wid-100 center-items">
+							        <div  class="col-md-8 col-sm-12 col-xs-12 center-items no-padding-xs margin-t-b-5" ng-click="createIndicator(programsAreaSelected)">
+							          <button class="wid-100 btn btn-lg btn-primary color-3 fs-xs-30">Crear Indicador</button>
+							        </div>
+						        </div>
+			       			 </div>
+				    	</div>					      
+				   </form>
+			   	</div>
+		    </md-tab>
+		    <md-tab label="Editar Indicadores">
+		    	 <!-- fomrulario creacion de Indicadores -->
+				<div  class="content-container-inner">
+				    <form class="wid-100 pos-relative">
+				        <!-- barra de progreso circular -->
+				        <div ng-if="waitCreateProgram" class="animate-if-panel progress-circular-panel center-items bg-W opacity-05">
+				          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+				        </div>
+				        <!-- encabezado de formulario -->
+				        <div class="form-header bg-3">
+					        <h4 class="fc-W text-initial margin-t-b-5">Editar indicador: [[indicatorForm.name ? indicatorForm.name :'' ]] [[programsAreaSelected.name ? 'en ' + programsAreaSelected.name :'' ]] </h4>
+					        <h5 class="fc-W hidden-xs text-initial margin-t-b-5">Por favor ingrese la siguiente información</h5>
+				        </div>
+				      	<div class="form-body pos-relative">
+				      		<!-- barra de progreso circular -->
+					        <div  ng-if="waitLoadAreas || waitLoadPrograms" class="animate-if-panel progress-circular-panel center-items bg-W animated fadeIn">
+					          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+					        </div>	
+				      		<!-- alertas de error -->
+							<alert ng-if="createMessagePrograms" type="danger" class="animated fadeInUp alert no-fixed" close="$parent.createMessagePrograms = null">
+								<strong>
+								  <UL type = disk >
+								    <LI class="text-initial" ng-repeat="msg in createMessagePrograms">[[msg]]
+								  </UL>
+								</strong>
+							</alert>
+							<!-- alerta de exito -->
+							<alert ng-if="createSuccessPrograms" class="animated fadeInUp alert no-fixed" type="success" close="$parent.createSuccessPrograms = null">
+								[[createSuccessPrograms]]
+							</alert>			      		
+							<div class="col-xs-12">
+						        <div class="form-group col-xs-12 col-md-6">
+						          <input ng-model="indicatorForm.name" type="text" ng-change="$parent.detectChangesProgram = true" class="form-control white" id="name" placeholder="Nombre del indicador">
+						        </div>
+						        <div class="form-group col-xs-12 col-md-6">
+						          <input ng-model="indicatorForm.goal" type="text" ng-change="$parent.detectChangesProgram = true" class="form-control white" id="objective" placeholder="Meta del indicator">
+						        </div>
+						        <div class="form-group col-xs-12 col-md-12">
+						        	<select class="form-control white" id="area" ng-options="area.id as area.name for area in programsAreas" ng-change="$parent.detectChangesProgram = true" ng-model="$parent.indicatorForm.area">
+								    </select>
+						        </div>
+						        <div class="form-group col-xs-12">
+						        	<label class="fc-silver">Peso del indicador: [[indicatorForm.weight]]%</label>
+						        	<md-slider ng-if="totalIndicatorsWeightEdit" flex class="md-primary" md-discrete ng-model="$parent.indicatorForm.weight" step="1" min="0" max="[[totalIndicatorsWeightEdit]]" ng-change="$parent.detectChangesProgram = true" aria-label="rating">
+     								 </md-slider>
+						          <!-- <input ng-model="programForm.weight" type="text" class="form-control white" id="user" placeholder="Peso de la Programa"> -->
+						        </div>					     
+						        <div class="wid-100">
+							        <div  class="col-md-6 col-sm-6 col-xs-12 center-items no-padding-xs" >
+							          <button class="wid-100 btn btn-lg btn-primary color-3 fs-xs-30" ng-click="editIndicator($parent.programsAreaSelected)" ng-disabled="!$parent.detectChangesProgram" >Guardar cambios</button>
+							        </div>
+							        <div  class="col-md-6 col-sm-6 col-xs-12 center-items no-padding-xs" >
+							          <button class="wid-100 btn btn-lg btn-primary color-4 fs-xs-30" ng-click="cancelEditIndicator($parent.programsAreaSelected);$parent.detectChangesProgram = false">Cancelar</button>
+							        </div>
+						        </div>
+			       			 </div>
+				    	</div>					      
+				   </form>
+			   	</div>
+		    </md-tab>      
+	    </md-tabs>
+	</div>
+</div>

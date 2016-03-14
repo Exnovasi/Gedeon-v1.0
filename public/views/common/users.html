@@ -1,0 +1,223 @@
+<!-- tiempo de espera  -->
+<!-- <div ng-if="checkUrl" class="full-height wid-100 center-items bg-blue pos-relative">
+  <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+</div> -->
+<div class="view-container animated fadeIn">
+  <!-- alertas de error -->
+<alert ng-if="createUserMessage" type="danger" class="animated fadeInUp alert" close="$parent.createUserMessage = null">
+	<strong>
+	  <UL type = disk >
+	    <LI class="text-initial" ng-repeat="msg in createUserMessage">[[msg]]
+	  </UL>
+	</strong>
+</alert>
+<!-- alerta de exito -->
+<alert ng-if="createUserSuccess" class="animated fadeInUp alert" type="success" close="$parent.createUserSuccess = null">
+	[[createUserSuccess]]
+</alert>
+
+	<div class="col-xs-12 col-sm-12 col-md-6 margin-t-b-20-sm-down bg-blue">
+		<!-- listado de usuarios -->
+		<div class="content-container-inner animated fadeIn">
+	        <!-- barra de progreso circular -->
+	        <div ng-if="waitUsersLoad" class="animate-if-panel progress-circular-panel center-items bg-W opacity-05">
+	          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+	        </div>
+	        <!-- encabezado de listas -->
+	        <div class="form-header bg-3">
+		        <h4 class="fc-W margin-t-b-5">Usuarios creados</h4>
+	        </div>
+	      	<div class="form-body no-padding-l-r panel-scroll-vertical-600-no-padding">
+	      		<!-- lista de todos los usuarios existentes -->
+	      		<div ng-if="users.length < 1" class="no-content-msg"><i class="mdi mdi-information-outline"></i> No hay ningun usuario creado</div>
+	      		<div ng-repeat="user in users" class="card-user-container">
+	      			<div class="col-xs-3 col-md-2">
+	      				<img class="avatar" src="[[user.avatar]]" alt="perfil de usuario [[user.name]]">
+	      			</div>
+	      			<div class="col-xs-9 col-md-10">
+	      				<div class="users-info-panel">
+		      				<h3 class="no-margin fc-3">[[user.name]] <small><span class="label label-primary label-right letter-spacing-xsmall [[user.rolename]]">[[user.rolename]]</span></small></h3>
+		      				<!-- <p class="fc-silver"><i class="mdi mdi-email"></i> [[user.email]] <small><i class="mdi mdi-phone"> [[user.telephone]]</i></small></p> -->
+		      				<p class="fc-silver no-margin"><i class="mdi mdi-email"></i> [[user.email]]</p>
+		      				<p class="fc-silver"><i class="mdi mdi-phone"></i> [[user.telephone]]</p>
+		      				<span class="label label-primary dependence">[[user.dependencename]]</span>
+
+	      				</div>
+	      					<div ng-if="user.enabled == 1" tooltip-popup-delay='1000' tooltip='Desactivar' tooltip-placement="left" class="actions-users-button btn btn-default">
+	      						<i class="mdi mdi-account-remove" ng-click="user.enabled = 0;enabledUser(user)"></i>
+	      					</div>
+	      					<div ng-if="user.enabled == 0" ng-click="user.enabled = 1;enabledUser(user)" tooltip-popup-delay='1000' tooltip='Activar' tooltip-placement="left" class="actions-users-button btn btn-default">
+	      						<i class="mdi mdi-account-check"></i>
+	      					</div>
+	      					<div class="actions-users-button btn btn-default" ng-click="loadUserForm(user)" tooltip-popup-delay='1000' tooltip='Editar' tooltip-placement="left">
+	      						<i class="mdi mdi-border-color"></i>
+	      					</div>
+	      			</div>
+	      		</div>	       
+	    	</div>
+		</div>
+	</div>
+	<div class="col-xs-12 col-sm-12 col-md-6 margin-t-b-20-sm-down">
+		<md-tabs  md-selected="selectedTabUsers" md-border-bottom md-autoselect class="tabs-config menu-hidden">
+		    <md-tab label="Crear usuario">
+				<!-- fomrulario creacion de usuarios -->
+				<div  class="content-container-inner">
+				    <form class="wid-100">
+				        <!-- barra de progreso circular -->
+				        <div ng-if="waitCreate" class="animate-if-panel progress-circular-panel center-items bg-W opacity-05">
+				          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+				        </div>
+				        <!-- encabezado de formulario -->
+				        <div class="form-header bg-3">
+					        <h4 class="fc-W text-initial margin-t-b-5">Crear Usuario</h4>
+					        <h5 class="fc-W hidden-xs text-initial margin-t-b-5">Por favor ingrese la siguiente información</h5>
+				        </div>
+				      	<div class="form-body">
+				      		<!-- Avatar -->
+				      		<div class="col-xs-12 col-md-4">
+					      		<div class="form-group col-lg-12 col-sm-12 col-xs-12 center-items">
+								    <div class="user-avatar-profile" ng-mouseover="changeAvatar = true" ng-mouseleave="changeAvatar = false">
+								    	<div ng-show="changeAvatar" class="cursor-pointer overlay-Primary center-items border-radius" ng-click="openModal()">
+											<div class="col-md-6">
+												<i class="fc-W fs-50 mdi mdi-file-image"></i>
+											</div>
+										</div>
+										<img class="img-responsive" ng-cloak ng-src="[[userForm.avatar]]" alt="imagen predeterminada de usuario">
+									</div>
+								</div>
+								<div class="wid-100 center-items">
+									<a class="link-primary cursor-pointer" ng-mouseover="changeAvatar = true" ng-mouseleave="changeAvatar = false" ng-click="openModal()"><i class="fs-15 mdi mdi-camera"></i> Cargar imagen</a>
+								</div>
+								<!-- Avatar -->
+							</div>
+							<div class="col-xs-12 col-md-8">
+						        <div class="form-group col-xs-12">
+						          <input ng-model="userForm.name" tooltip-popup-delay='1000' uib-tooltip='Ingrese el nombre de usuario' tooltip-placement="top"type="text" class="form-control white" id="user" placeholder="Nombre">
+						        </div>
+						        <div class="form-group col-xs-12 col-md-6">
+						          <input ng-model="userForm.email" tooltip-popup-delay='1000' uib-tooltip='Ingrese el correo electronico' tooltip-placement="top" type="text" class="form-control white" id="email" placeholder="Correo electronico">
+						        </div>
+						        <div class="form-group col-xs-12 col-md-6">
+						          <input ng-model="userForm.telephone" tooltip-popup-delay='1000' uib-tooltip='Ingrese el numero telefonico' tooltip-placement="top" type="text" class="form-control white" id="telephone" placeholder="Telefono">
+						        </div>
+						        <!-- <div class="form-group col-xs-12 col-md-6">
+						          <input type="text" ng-model="userForm.dependence" typeahead="dependence.id as dependence.name for dependence in dependences | filter:$viewValue | limitTo:8" class="form-control white">
+						        </div> -->
+						        <div class="form-group col-xs-12 col-md-6">
+						        	<select class="form-control white" id="role" ng-model="userForm.dependence">
+								      <option value="">Asignar una dependencia</option> <!-- not selected / blank option -->
+								      <option ng-repeat="dependence in dependences" value="[[dependence.id]]">[[dependence.name]]</option> <!-- interpolation -->
+								    </select>
+						        </div>
+						        <div class="form-group col-xs-12 col-md-6">
+						        	<select class="form-control white" id="role" ng-model="userForm.role">
+								      <option value="">Asignar un rol</option> <!-- not selected / blank option -->
+								      <option ng-repeat="role in usersRoles" value="[[role.id]]">[[role.name]]</option> <!-- interpolation -->
+								    </select>
+						        </div>
+						        <div class="form-group col-xs-12 col-md-12">
+						        	<tags-input 
+						        		ng-model="userForm.tags" 
+						        		placeholder="Añadir Proyecto(s)">
+								        <auto-complete 
+								        	source="loadTags($query,userForm.dependence)">
+								        </auto-complete>
+								    </tags-input>
+						        </div>
+						        <div  class="form-group col-xs-12 col-md-6">
+						          <input ng-model="userForm.password" type="password" class="form-control white" id="password" placeholder="Password">
+						        </div>
+						        <div  class="form-group col-xs-12 col-md-6">
+						          <input ng-model="userForm.password_confirmation" type="password" class="form-control white" id="password_confirmation" placeholder="Confirmar password">
+						        </div>
+						        <div class="wid-100 center-items">
+							        <div  class="col-md-6 col-sm-12 col-xs-12 center-items no-padding-xs margin-t-b-5" ng-click="createUser()">
+							          <button class="wid-100 btn btn-lg btn-primary color-3 fs-xs-30">Crear usuario</button>
+							        </div>
+						        </div>
+			       			 </div>
+				    	</div>
+				      
+				   </form>
+			   	</div>
+			</md-tab>
+		    <md-tab label="Editar usuario">
+			   	<!--  -->
+			   	<!-- fomrulario editar usuarios -->
+				<div ng-show="editingUser" class="content-container-inner">
+				    <form class="wid-100">
+				        <!-- barra de progreso circular -->
+				        <div ng-if="waitEdit" class="animate-if-panel progress-circular-panel center-items bg-W opacity-05">
+				          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+				        </div>
+				        <!-- encabezado de formulario -->
+				        <div class="form-header bg-3">
+					        <h4 class="fc-W text-initial margin-t-b-5">Editar usuario</h4>
+					        <h5 class="fc-W hidden-xs text-initial margin-t-b-5">[[userForm.name]]</h5>
+				        </div>
+				      	<div class="form-body">
+				      		<!-- Avatar -->
+				      		<div class="col-xs-12 col-md-4">
+					      		<div class="form-group col-lg-12 col-sm-12 col-xs-12 center-items">
+								    <div class="user-avatar-profile" ng-mouseover="changeAvatar = true" ng-mouseleave="changeAvatar = false">
+								    	<div ng-show="changeAvatar" class="cursor-pointer overlay-Primary center-items border-radius" ng-click="openModal()">
+											<div class="col-md-6">
+												<i class="fc-W fs-50 mdi mdi-file-image"></i>
+											</div>
+										</div>
+										<img class="img-responsive" ng-cloak ng-src="[[userForm.avatar]]" alt="imagen predeterminada de usuario">
+									</div>
+								</div>
+								<div class="wid-100 center-items">
+									<a class="link-primary cursor-pointer" ng-mouseover="changeAvatar = true" ng-mouseleave="changeAvatar = false" ng-click="openModal()"><i class="fs-15 mdi mdi-camera"></i> Cambiar imagen</a>
+								</div>
+								<!-- Avatar -->
+							</div>
+							<div class="col-xs-12 col-md-8">
+						        <div class="form-group col-xs-12">
+						          <input ng-model="userForm.name" tooltip-popup-delay='1000' uib-tooltip='Ingrese el nombre de usuario' tooltip-placement="top" ng-change="detectChanges = true" type="text" class="form-control white" id="user" placeholder="Nombre">
+						        </div>
+						        <div class="form-group col-xs-12 col-md-6">
+						          <input ng-model="userForm.email" tooltip-popup-delay='1000' uib-tooltip='Ingrese el correo electronico' tooltip-placement="top" ng-change="detectChanges = true" type="text" class="form-control white" id="email" placeholder="Correo electronico">
+						        </div>
+						        <div class="form-group col-xs-12 col-md-6">
+						          <input ng-model="userForm.telephone" tooltip-popup-delay='1000' uib-tooltip='Ingrese el numero telefonico' tooltip-placement="top" ng-change="detectChanges = true" type="text" class="form-control white" id="telephone" placeholder="Telefono">
+						        </div>
+						        <!-- <div class="form-group col-xs-12 col-md-6">
+						          <input type="text" ng-change="detectChanges = true" ng-model="userForm.dependence" typeahead="dependence.id as dependence.name for dependence in dependences | filter:$viewValue | limitTo:8" class="form-control white">
+						        </div> -->
+						        <div class="form-group col-xs-12 col-md-6">
+						        	<select class="form-control white" id="role" ng-options="dependence.id as dependence.name for dependence in dependences" ng-change="detectChanges = true" ng-model="userForm.dependence">     
+								    </select>
+						        </div>
+						        <div class="form-group col-xs-12 col-md-6">
+						        	<select class="form-control white" id="role" ng-change="detectChanges = true" ng-model="userForm.role" ng-options="role.id as role.name for role in usersRoles">
+								      <option value="">Asignar un rol</option> <!-- not selected / blank option -->
+								     
+								    </select>
+						        </div>
+						        	<p class="cursor-pointer" ng-click="isCollapsed = !isCollapsed"><a>Cambiar Contraseña</a></p>
+								<div collapse="!isCollapsed">
+							        <div  class="form-group col-xs-12 col-md-6">
+							          <input ng-model="userForm.password" type="password" ng-change="detectChanges = true" class="form-control white" id="password" placeholder="Password">
+							        </div>
+							        <div  class="form-group col-xs-12 col-md-6">
+							          <input ng-model="userForm.password_confirmation" ng-change="detectChanges = true" type="password" class="form-control white" id="password_confirmation" placeholder="Confirmar password">
+							        </div>
+								</div>
+						        <div class="wid-100">
+							        <div  class="col-md-6 col-sm-6 col-xs-12 center-items no-padding-xs" >
+							          <button class="wid-100 btn btn-lg btn-primary color-3 fs-xs-30" ng-click="editUserPartial()" ng-disabled="!detectChanges" >Guardar cambios</button>
+							        </div>
+							        <div  class="col-md-6 col-sm-6 col-xs-12 center-items no-padding-xs" >
+							          <button class="wid-100 btn btn-lg btn-primary color-4 fs-xs-30" ng-click="cancelEditUser()">Cancelar</button>
+							        </div>
+						        </div>
+					        </div>
+				    	</div>				      
+				   </form>
+			   	</div>
+	     	</md-tab>      
+	    </md-tabs>
+	</div>
+</div>

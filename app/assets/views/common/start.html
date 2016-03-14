@@ -1,0 +1,31 @@
+<div class="view-container center-items">
+  	<div class="wid-100 pos-relative">
+		<!-- informacion del plan de desarrollo -->
+		<div  class="content-container-inner">
+			<!-- barra de progreso circular -->
+	        <div ng-if="waitEditDevPlan" class="animate-if-panel progress-circular-panel center-items bg-W opacity-05">
+	          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+	        </div>
+		    <div ng-if="!waitEditDevPlan" class="pd-card wid-100 no-border-radius" style="min-height: 550px;">
+				<div class="wid-100 pd-card-content truncate-container">
+					<div class="cover-blur">
+						<img  src="[[devPlanForm.image]]"></img>
+					</div>
+					<div class="col-md-12 center-items">
+						<div class="max-wid-300 max-wid-xs-200 margin-top-xs-80 margin-top-big">
+							<img class="img-responsive margin-t-15 border-3px bd-W" src="[[devPlanForm.image]]"></img>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div class="wid-100">
+							<h2 ng-if="devPlanForm.title" class="fc-4 fs-25">[[devPlanForm.title]]</h2>
+							<div class="wid-100 center-items">
+								<p ng-if="devPlanForm.description" class="fc-G fs-16 col-md-10">[[devPlanForm.description]]</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+	   	</div>
+	</div>
+</div>

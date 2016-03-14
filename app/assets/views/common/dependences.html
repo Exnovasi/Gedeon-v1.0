@@ -1,0 +1,147 @@
+<div class="view-container padding-t-20">
+  	<div class="col-xs-12 col-sm-12 col-md-6 margin-t-b-20-sm-down">
+		<!-- listado de usuarios -->
+		<div class="content-container-inner animated fadeIn">
+	        <!-- barra de progreso circular -->
+	        <div ng-if="waitLoad" class="animate-if-panel progress-circular-panel center-items bg-W opacity-05">
+	          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+	        </div>
+	        <!-- encabezado de listas -->
+	        <div class="form-header bg-3">
+		        <h4 class="fc-W margin-t-b-5">Dependencias creadas</h4>
+	        </div>
+	      	<div class="form-body no-padding-l-r panel-scroll-vertical-600-no-padding">
+	      		<div ng-if="dependences.length < 1" class="no-content-msg"><i class="mdi mdi-information-outline"></i> No hay ninguna dependencia creada</div>
+	      		<!-- lista de todos los usuarios existentes -->
+	      		<div ng-repeat="dependence in dependences" class="card-user-container">
+	      			<!-- popUp confirmar -->
+			        <div ng-if="waitDelete == dependence" class="animated zoomInUp popup-delete-user">
+			        	<!-- barra de progreso circular -->
+				        <div ng-if="waitDeleteDependence" class="animate-if-panel progress-circular-panel center-items bg-W opacity-05">
+				          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+				        </div>
+			        	<div class="container-inner">
+			        		<p class="popup-text"><i class="mdi mdi-alert"></i> [[popupText]]
+			        			<button type="button" class="close" ng-click="closeWaitDelete(dependence)" tabindex="0" aria-hidden="false">
+							        <span aria-hidden="true">×</span>
+							        <span class="sr-only">Close</span>
+							    </button>
+			        		</p>
+				          	<div  class="form-group col-xs-6">
+						        <input ng-model="dependence.deletePassword" type="password" class="form-control white" id="deletePassword2" placeholder="Password">
+					        </div>
+					        <div  class="form-group col-xs-6">
+						       <button class="wid-100 btn btn-lg btn-primary color-4 fs-xs-30" ng-disabled="!dependence.deletePassword" ng-click="deleteDependence(dependence)">Eliminar <br class="visible-xs">dependencia</button>
+					        </div>
+			        	</div>
+				        <div class="overlay"></div>
+			        </div>
+			        <!-- popUp confirmar -->
+	      			<div class="col-xs-12">
+	      				<div class="users-info-panel">
+		      				<h3 class="no-margin fc-1">[[dependence.name]]</h3>
+	      				</div>
+	      				<div class="actions-users">
+		      				<div class="actions-users-button btn btn-default" ng-click="confirmDeleteDependence(dependence)" tooltip-popup-delay='1000' tooltip='Eliminar' tooltip-placement="left">
+		      						<i class="mdi mdi-delete"></i>	
+		      					</div>
+	      					<div class="actions-users-button btn btn-default" tooltip-popup-delay='1000' tooltip='Editar' tooltip-placement="left">
+	      						<i class="mdi mdi-border-color" ng-click="loadDependenceForm(dependence)"></i>
+	      					</div>
+	  					</div>
+	      			</div>
+	      		</div>	       
+	    	</div>
+		</div>
+	</div>
+	<div class="col-xs-12 col-sm-12 col-md-6 margin-t-b-20-sm-down">
+	    <md-tabs  md-selected="selectedTabDep" md-border-bottom md-autoselect class="tabs-config menu-hidden">
+		    <md-tab label="Crear dependencias">
+		        <!-- fomrulario creacion de dependencias -->
+				<div  class="content-container-inner">
+				    <form class="wid-100">
+				        <!-- barra de progreso circular -->
+				        <div ng-if="waitCreate" class="animate-if-panel progress-circular-panel center-items bg-W opacity-05">
+				          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+				        </div>
+				        <!-- encabezado de formulario -->
+				        <div class="form-header bg-3">
+					        <h4 class="fc-W text-initial margin-t-b-5">Crear dependencia</h4>
+					        <h5 class="fc-W hidden-xs text-initial margin-t-b-5">Por favor ingrese la siguiente información</h5>
+				        </div>
+				      	<div class="form-body">	
+				      		<!-- alertas de error -->
+							<alert ng-if="createMessage" type="danger" class="animated fadeInUp alert no-fixed" close="$parent.createMessage = null">
+								<strong>
+								  <UL type = disk >
+								    <LI class="text-initial" ng-repeat="msg in createMessage">[[msg]]
+								  </UL>
+								</strong>
+							</alert>
+							<!-- alerta de exito -->
+							<alert ng-if="createSuccess" class="animated fadeInUp alert no-fixed" type="success" close="$parent.createSuccess = null">
+								[[createSuccess]]
+							</alert>			      		
+							<div class="col-xs-12">
+						        <div class="form-group col-xs-12">
+						          <input ng-model="dependenceForm.name" type="text" class="form-control white" id="user" placeholder="Nombre de la dependencia">
+						        </div>						        
+						        <div class="wid-100 center-items">
+							        <div  class="col-md-8 col-sm-12 col-xs-12 center-items no-padding-xs margin-t-b-5" ng-click="createDependence()">
+							          <button class="wid-100 btn btn-lg btn-primary color-3 fs-xs-30">Crear dependencia</button>
+							        </div>
+						        </div>
+			       			 </div>
+				    	</div>					      
+				   </form>
+			   	</div>
+		    </md-tab>
+		    <md-tab label="Editar dependencias">
+
+
+
+		    	 <!-- fomrulario creacion de dependencias -->
+				<div  class="content-container-inner">
+				    <form class="wid-100">
+				        <!-- barra de progreso circular -->
+				        <div ng-if="waitCreate" class="animate-if-panel progress-circular-panel center-items bg-W opacity-05">
+				          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+				        </div>
+				        <!-- encabezado de formulario -->
+				        <div class="form-header bg-3">
+					        <h4 class="fc-W text-initial margin-t-b-5">Editar dependencia</h4>
+					        <h5 class="fc-W hidden-xs text-initial margin-t-b-5">[[dependenceForm.name]]</h5>
+				        </div>
+				      	<div class="form-body">	
+				      		<!-- alertas de error -->
+							<alert ng-if="createMessage" type="danger" class="animated fadeInUp alert no-fixed" close="$parent.createMessage = null">
+								<strong>
+								  <UL type = disk >
+								    <LI class="text-initial" ng-repeat="msg in createMessage">[[msg]]
+								  </UL>
+								</strong>
+							</alert>
+							<!-- alerta de exito -->
+							<alert ng-if="createSuccess" class="animated fadeInUp alert no-fixed" type="success" close="$parent.createSuccess = null">
+								[[createSuccess]]
+							</alert>			      		
+							<div class="col-xs-12">
+						        <div class="form-group col-xs-12">
+						          <input ng-model="dependenceForm.name" type="text" ng-change="$parent.detectChanges = true" class="form-control white" id="user" placeholder="Nombre de la dependencia">
+						        </div>						        
+						        <div class="wid-100">
+							        <div  class="col-md-6 col-sm-6 col-xs-12 center-items no-padding-xs" >
+							          <button class="wid-100 btn btn-lg btn-primary color-3 fs-xs-30" ng-click="editDependences()" ng-disabled="!$parent.detectChanges" >Guardar cambios</button>
+							        </div>
+							        <div  class="col-md-6 col-sm-6 col-xs-12 center-items no-padding-xs" >
+							          <button class="wid-100 btn btn-lg btn-primary color-4 fs-xs-30" ng-click="cancelEditDependence()">Cancelar</button>
+							        </div>
+						        </div>
+			       			 </div>
+				    	</div>					      
+				   </form>
+			   	</div>
+		    </md-tab>      
+	    </md-tabs>
+	</div>
+</div>

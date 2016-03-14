@@ -1,0 +1,145 @@
+<div class="view-container padding-t-20 pos-relative">
+   <!-- barra de progreso circular -->
+    <div  ng-if="waitLoadPermissions" class="animate-if-panel progress-circular-panel center-items bg-W animated fadeIn">
+      <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+    </div>
+  	<div ng-if="!waitLoadPermissions && actualUser.role==4 || actualUser.role==5" class="col-xs-12 margin-t-b-20-sm-down">
+  		<md-tabs  md-selected="selectedTabProjects" md-border-bottom md-autoselect class="tabs-wid-50">
+		    <md-tab label="PROYECTOS ASIGNADOS">
+		    	<div  class="content-container-inner" ng-init="loadProjectsUser()">
+			<!-- 
+				///
+				/// nuevo listado de Poyectos
+				///
+			 -->
+			<div class="list-table-new">
+ 				<div class="header bg-3">
+ 					<div class="col-xs-12">
+			        	<h4 class="fc-W margin-t-b-5">Proyectos creados <small class="fc-silver">[[actualUser.dependenceName]]</small></h4>
+		        	</div>
+ 				</div>
+		        <table cellspacing="0">
+		            <tr  ng-animate="'animate'" ng-if="projectsNoContentMsg && userProjects != 0">
+		                <th width="230">Peso - Ejecución</th>
+		                <th>Nombre</th>
+		                <th>Programa</th>
+		                <th>Presupuesto</th>
+		                <th width="230">Objetivo</th>
+		                <th>Dependencia</th>
+		            </tr>
+		            <!-- barra de progreso circular -->
+			        <div  ng-if="waitLoadProjects" class="animate-if-panel progress-circular-panel center-items bg-W animated fadeIn">
+			          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+			        </div>
+			        <div ng-if="projectsNoContentMsg && userProjects == 0" class="no-content-msg animated fadeIn"><i class="mdi mdi-information-outline"></i> [[projectsNoContentMsg]]</div>
+		            <tr ng-repeat="project in userProjects">
+		                <td>
+		                	<div class="wid-100 center-items margin-bottom-medium">
+		                		<div class="lines-weight-container">[[project.weight]]%</div>
+	                		</div>
+		                	<div>
+			                	<span class="fc-silver col-xs-3">Año1: <span class="badge success">[[project.year1]]%</span></span>
+		      					<span class="fc-silver col-xs-3">Año2: <span class="badge success">[[project.year2]]%</span></span>
+		      					<span class="fc-silver col-xs-3">Año3: <span class="badge success">[[project.year3]]%</span></span>
+		      					<span class="fc-silver col-xs-3">Año4: <span class="badge success">[[project.year4]]%</span></span>
+		                	</div>
+		                </td>
+		                <td>[[project.name]]</td>
+		                <td>
+		                	<div class="wid-100 center-items">
+		                		<span class="label label-primary label-right letter-spacing-xsmall [[project.program]]">[[project.programname]]</span>
+	                		</div>
+	                	</td>
+		                <td>[[project.budget | noFractionCurrency]]</td>
+		                <td>[[project.description]]</td>
+		                <td>
+		                	<div class="wid-100 center-items">
+		                		<span class="label label-primary dependence">[[project.dependencename]]</span>
+		                	</div>
+		                </td>
+		                
+
+		            </tr>
+		        </table>
+			    </div>
+			    <!-- 
+					///
+					/// FIN nuevo listado de Poyectos
+					///
+				 -->
+		   	</div>										       
+			</md-tab>
+			<md-tab label="PROGRAMACIÓN DE EJECUCION POR AÑO">
+			</md-tab>    
+	    </md-tabs>
+	</div>
+	<div class="col-xs-12 margin-t-b-20-sm-down" ng-if="!waitLoadPermissions && actualUser.role==1 || actualUser.role==2">
+		<div  class="content-container-inner" ng-init="loadProjectsDependece()">
+			<!-- 
+				///
+				/// nuevo listado de Poyectos
+				///
+			 -->
+			<div class="list-table-new">
+ 				<div class="header bg-3">
+ 					<div class="col-xs-12 col-sm-3">
+			       		<h4 class="fc-W margin-t-b-5">Proyectos creados</h4>
+		       		</div>
+			        <div class="col-xs-12 col-sm-4">
+			        	<select class="form-control white med-40" id="role" ng-options="dependence.id as dependence.name for dependence in viewDataBind('dependences')" ng-model="$parent.dependenceSelected">
+					      <option value="">Seleccione una dependencia</option> <!-- not selected / blank option -->
+					     <!--  <option ng-repeat="area in lines" value="[[area.id]]">[[area.name]]</option> --> <!-- interpolation -->
+					    </select>
+			        </div>
+ 				</div>
+		        <table cellspacing="0">
+		            <tr>
+		                <th width="230">Peso - Ejecución</th>
+		                <th>Nombre</th>
+		                <th>Programa</th>
+		                <th>Presupuesto</th>
+		                <th width="230">Objetivo</th>
+		                <th>Dependencia</th>
+		            </tr>
+		            <!-- barra de progreso circular -->
+				        <div  ng-if="waitLoadAllProjects" class="animate-if-panel progress-circular-panel center-items bg-W animated fadeIn">
+				        	<md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+				        </div>
+		            <tr ng-repeat="project in allProjects |  loadProjectsfilter: dependenceSelected">
+		                <td>
+		                	<div class="wid-100 center-items margin-bottom-medium">
+		                		<div class="lines-weight-container">[[project.weight]]%</div>
+	                		</div>
+		                	<div>
+			                	<span class="fc-silver col-xs-3">Año1: <span class="badge success">[[project.year1]]%</span></span>
+		      					<span class="fc-silver col-xs-3">Año2: <span class="badge success">[[project.year2]]%</span></span>
+		      					<span class="fc-silver col-xs-3">Año3: <span class="badge success">[[project.year3]]%</span></span>
+		      					<span class="fc-silver col-xs-3">Año4: <span class="badge success">[[project.year4]]%</span></span>
+		                	</div>
+		                </td>
+		                <td>[[project.name]]</td>
+		                <td>
+		                	<div class="wid-100 center-items">
+		                		<span class="label label-primary label-right letter-spacing-xsmall [[project.program]]">[[project.programname]]</span>
+	                		</div>
+	                	</td>
+		                <td>[[project.budget | noFractionCurrency]]</td>
+		                <td>[[project.description]]</td>
+		                <td>
+		                	<div class="wid-100 center-items">
+		                		<span class="label label-primary dependence">[[project.dependencename]]</span>
+		                	</div>
+		                </td>
+		                
+
+		            </tr>
+		        </table>
+		    </div>
+		    <!-- 
+				///
+				/// FIN nuevo listado de Poyectos
+				///
+			 -->
+	   	</div>		   
+	</div>
+</div>

@@ -1,0 +1,174 @@
+@import "bourbon/bourbon.scss";
+@mixin create-theme (
+	$color1, 
+	$color2: #001, 
+	$color3: #fff,
+	$color4: #fff
+	){
+
+// *****************************************************************************
+// Main
+// *****************************************************************************
+	.bg-1 { background: $color2 !important; }
+	.bg-2 { background: $color2 !important; }
+	.bg-3 { background: $color3 !important; }
+	.bg-4 { background: $color4 !important; }
+	.fc-3 {color: $color3!important}
+	.fc-4 {color: $color4!important}
+	.bd-3 { border-color: $color3 !important; }
+		
+
+// *****************************************************************************
+// Elementos Principales
+// *****************************************************************************
+	.btn-primary{
+		background: $color1;
+
+		&:hover, &:active, &.active { background: $color3; }
+
+		&.color-4{
+			background: $color4;
+			color: #fff;
+			&:hover, &:active, &.active { background: #fff;color: $color4;border-color: $color4}
+		}
+
+		&.color-3{
+			background: $color3;
+			color: #fff;
+			&:hover, &:active, &.active { background:$color4;color:#fff;border-color: $color4}
+		}
+
+		&.color-1{
+			background: $color1;
+
+			&:hover, &:active, &.active {
+			 	background: #fff;color: $color1;border-color: $color1;
+
+				path{
+					
+					fill: $color1;
+				}
+			}
+		}
+
+		&.color-2{
+			background: $color2;
+			color: #fff;
+			&:hover, &:active, &.active { background:#fff;color: $color2;border-color: $color2}
+		}
+	}
+
+	md-progress-circular.md-default-theme .md-inner .md-right .md-half-circle {
+	  border-right-color: $color4!important;
+	}
+
+	md-progress-circular.md-default-theme .md-inner .md-right .md-half-circle {
+	  border-top-color: $color1!important;
+	}
+
+	md-progress-circular.md-default-theme .md-inner .md-left .md-half-circle{
+		  border-left-color: $color2!important;
+	}
+
+	md-progress-circular.md-default-theme .md-inner .md-left .md-half-circle{
+		border-top-color: $color3!important;
+	}
+
+	/* slider para seleccionar un rango de valores */
+
+	md-slider.md-default-theme.md-primary .md-thumb:after {
+	    border-color: $color4;
+	    background-color: $color4;
+	}
+
+	md-slider.md-default-theme.md-primary .md-sign:after {
+	    border-top-color:  $color4;
+	}
+
+	md-slider.md-default-theme.md-primary .md-sign {
+	    background-color: $color4;
+	}
+
+	md-slider.md-default-theme.md-primary .md-track.md-track-fill {
+	    background-color: $color4;
+	}
+
+	/* icono menu en dispositivos moviles */
+	.icon-menu-container{
+
+		/* border-left-color: $color4;
+		border-top-color: $color1;
+		border-right-color: $color3;
+		border-bottom-color: $color2; */
+		border-color: $color3;
+		color: $color3;
+
+		&:hover{
+
+			background: $color3!important;
+			color: #fff!important;
+
+		}
+	}
+
+	.form-header{
+		background: $color3;
+
+		&::after {
+		    border-color: $color3; 
+		}
+	}
+
+	md-tab.active {
+	    color: $color3!important;
+	}
+
+	/* .lines-weight-container{
+
+		-webkit-box-shadow: 0px 0px 0px 5px $color4;
+		-moz-box-shadow: 0px 0px 0px 5px $color4;
+		box-shadow: 0px 0px 0px 5px $color4;
+
+	} */
+
+}
+
+
+// -------------------------------------------------------------------------
+// class
+// -------------------------------------------------------------------------
+.theme1{	
+	@include create-theme(
+		#ceb904,
+		#e48d12,
+		#0c5c9a, 
+		#d21040
+	); 
+}
+
+.theme2{	
+	@include create-theme(
+		#E6344A,
+		#04779B,
+		#0B5379,
+		#FBB351
+	); 
+}
+
+.theme3{	
+	@include create-theme(
+		#95a5a6,
+		#e67e22, 
+		#d35400,
+		#f1c40f
+	); 
+}
+
+.theme4{	
+	@include create-theme(
+		#9b59b6,
+		#e74c3c, 
+		#c0392b,
+		#3cd27b
+	); 
+}

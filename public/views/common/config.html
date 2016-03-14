@@ -1,0 +1,45 @@
+<!-- tiempo de espera  -->
+<div ng-if="checkUrl" class="full-height wid-100 center-items bg-blue">
+  <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+</div>
+<md-content ng-if="!checkUrl" class="md-padding bg-transparent">
+  <md-tabs md-selected="selectedIndex" md-border-bottom md-autoselect class="tabs-config">
+    <!-- <md-tab ng-repeat="tab in tabs"
+            ng-disabled="tab.disabled"
+            label="[[tab.title]]">
+      		<div ng-include="[[tab.templateHtml]]"></div>
+    </md-tab> -->
+    <md-tab 
+            label="DEPENDENCIAS">
+      		<div ng-include="'views/common/dependences.html'"></div>
+    </md-tab>
+    <md-tab 
+            label="LÍNEAS ESTRATÉGICAS">
+      		<div ng-include="'views/common/lines.html'"></div>
+    </md-tab>
+    <md-tab 
+            label="ÁREAS">
+      		<div ng-include="'views/common/areas.html'"></div>
+    </md-tab>
+    <md-tab 
+            label="IND. RESULTADO">
+          <div ng-include="'views/common/result_indicators.html'"></div>
+    </md-tab>
+    <md-tab 
+            label="PROGRAMAS">
+      		<div ng-include="'views/common/programs.html'"></div>
+    </md-tab>
+    <md-tab 
+            label="PROYECTOS">
+      		<div ng-include="'views/common/projects.html'"></div>
+    </md-tab>
+    <md-tab 
+            label="IND. PRODUCTO">
+          <div ng-include="'views/common/product_indicators.html'"></div>
+    </md-tab>
+    <md-tab 
+            label="PÁGINA DE INICIO">
+      		<div ng-include="'views/common/development_plan.html'"></div>
+    </md-tab>
+  </md-tabs>
+</md-content>

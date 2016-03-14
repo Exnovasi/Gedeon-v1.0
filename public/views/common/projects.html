@@ -1,0 +1,275 @@
+<div class="view-container padding-t-20">
+  	<div class="col-xs-12 col-sm-12 col-md-6 margin-t-b-20-sm-down">
+		<!-- listado de usuarios -->
+		<div class="content-container-inner animated fadeIn">
+	        <!-- barra de progreso circular -->
+	        <!-- encabezado de listas -->
+	        <div class="form-header bg-3">
+	        	<div class="col-xs-12">
+		        	<h4 class="fc-W margin-t-b-5">Proyectos creados</h4>
+	        	</div>
+	        	<div class="col-xs-12 col-sm-4 col-md-3">
+		        	<label class="fc-silver">Filtrar por programa:</label>
+		        </div>
+		        <div class="col-xs-12 col-sm-8 col-md-9">
+	              <select id="selectProjects" ng-model="$parent.projectsProgramSelected" ng-change="selectProject($parent.projectsProgramSelected)" ng-options="program.name for program in $parent.projectsPrograms" typeahead-loading="projectLoadingPrograms" class="form-control white med-40"><select>
+	               <!--  <input id="typeHeadProjects"type="text" ng-model="$parent.projectsProgramSelected" typeahead-on-select="selectProject($item, $model, $label)" ng-change="projectsLoadPrograms($viewValue)" placeholder="Buscar proyectos por programa" typeahead="program.name for program in $parent.projectsPrograms | filter:{name:$viewValue} | limitTo: 20" typeahead-loading="projectLoadingPrograms" class="form-control white"> -->
+	            </div>
+	        </div>
+	      	<div class="form-body no-padding-l-r panel-scroll-vertical-600-no-padding pos-relative">
+	      		<!-- barra de progreso circular -->
+		        <div  ng-if="waitLoadProjects" class="animate-if-panel progress-circular-panel center-items bg-W animated fadeIn">
+		          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+		        </div>
+	      		<!-- lista de todos las Áreas existentes -->
+	      		<div ng-if="projectsNoContentMsg && totalProjectsWeight != 0" class="no-content-msg animated fadeIn"><i class="mdi mdi-information-outline"></i> [[projectsNoContentMsg]]</div>
+	      		<div ng-repeat="project in projects" class="card-user-container">
+	      			<!-- popUp confirmar -->
+			        <div ng-if="waitConfirmDeleteProject == project" class="animated zoomInUp popup-delete-user">
+			        	<!-- barra de progreso circular -->
+				        <div ng-if="waitDeleteProject" class="animate-if-panel progress-circular-panel center-items bg-W opacity-05">
+				          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+				        </div>
+			        	<div class="container-inner">
+			        		<p class="popup-text"><i class="mdi mdi-alert"></i> [[popupTextProject]]
+			        			<button type="button" class="close" ng-click="closeWaitDeleteProject(project)" tabindex="0" aria-hidden="false">
+							        <span aria-hidden="true">×</span>
+							        <span class="sr-only">Close</span>
+							    </button>
+			        		</p>
+				          	<div ng-if="!reassignProjects" class="form-group col-xs-6">
+						        <input ng-model="project.deletePassword" type="password" class="form-control white" id="deletePassword2" placeholder="Password">
+					        </div>
+					        <div ng-if="reassignProjects" class="form-group col-xs-6">
+					        	<select class="form-control white" id="role" ng-model="project.reassignProjectId">
+							      <option value="">Reasignar proyectos a otro proyecto</option> <!-- not selected / blank option -->
+							      <option ng-repeat="opt in projectsAux" value="[[opt.id]]">[[opt.name]]</option> <!-- interpolation -->
+							    </select>
+					        </div>
+					        <div  class="form-group col-xs-6">
+						       <button class="wid-100 btn btn-lg btn-primary color-4 fs-xs-30" ng-disabled="!project.deletePassword && project.reassignProjectId == null" ng-click="deleteProject(project)">[[reassignProjects ? 'Reasignar proyectos' :'Eliminar proyecto' ]]</button>
+					        </div>
+			        	</div>
+				        <div class="overlay"></div>
+			        </div>
+			        <!-- popUp confirmar -->
+	      			<div class="col-xs-12">
+	      				<div class="users-info-panel">
+	      					<div class="col-xs-3 col-sm-2">
+	      						<div class="lines-weight-container">
+	      							[[project.weight]]%
+	      						</div>
+	      					</div>
+	      					<div class="col-xs-9 col-sm-10">
+			      				<h3 class="no-margin fc-3">[[project.name]]<small><span class="label label-primary label-right letter-spacing-xsmall [[project.program]]">[[project.programname]]</span></small></h3>
+			      				<p class="fc-silver no-margin"><i class="mdi mdi-cash fc-warning"></i> [[project.budget]] $</p>
+			      				<p class="fc-silver no-margin"><i class="mdi mdi-crosshairs-gps fc-success"></i> [[project.description]]</p>
+			      				<span class="label label-primary dependence">[[project.dependencename]]</span>
+			      				<div class="wid-100 inline-b margin-t-5">
+			      					<span class="fc-silver col-xs-3">Año1: <span class="badge success">[[project.year1]]</span></span>
+			      					<span class="fc-silver col-xs-3">Año2: <span class="badge success">[[project.year2]]</span></span>
+			      					<span class="fc-silver col-xs-3">Año3: <span class="badge success">[[project.year3]]</span></span>
+			      					<span class="fc-silver col-xs-3">Año4: <span class="badge success">[[project.year4]]</span></span>
+			      				</div>
+	      					</div>
+	      				</div>
+	      				<div class="actions-users">
+	      					<div class="actions-users-button btn btn-default" tooltip-popup-delay='1000' tooltip='Eliminar' tooltip-placement="left" ng-click="confirmDeleteProject(project)">
+	      						<i class="mdi mdi-delete"></i>	
+	      					</div>
+	      					<div class="actions-users-button btn btn-default" tooltip-popup-delay='1000' tooltip='Editar' tooltip-placement="left" ng-click="loadProjectForm(project);$parent.detectChangesProject = false">
+	      						<i class="mdi mdi-border-color"></i>
+	      					</div>
+	      				</div>
+	      			</div>
+	      		</div>	       
+	    	</div>
+		</div>
+	</div>
+	<div class="col-xs-12 col-sm-12 col-md-6 margin-t-b-20-sm-down">
+	    <md-tabs  md-selected="selectedTabProjects" md-border-bottom md-autoselect class="tabs-config menu-hidden">
+		    <md-tab label="Crear Proyectos">
+		        <!-- fomrulario creacion de Proyectos -->
+				<div  class="content-container-inner">
+				    <form class="wid-100 inline-b">
+				        <!-- barra de progreso circular -->
+				        <div ng-if="waitCreateProject" class="animate-if-panel progress-circular-panel center-items bg-W opacity-05">
+				          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+				        </div>
+				        <!-- encabezado de formulario -->
+				        <div class="form-header bg-3">
+					        <h4 class="fc-W text-initial margin-t-b-5">Crear proyecto [[programsAreaSelected.name ? 'en ' + programsAreaSelected.name :'' ]]</h4>
+					        <h5 class="fc-W hidden-xs text-initial margin-t-b-5">Por favor ingrese la siguiente información</h5>
+				        </div>
+				      	<div class="form-body pos-relative inline-b wid-100 margin-top-big">
+			      			<!-- barra de progreso circular -->
+				        	<div  ng-if="waitLoadAreas || waitLoadProjects" class="animate-if-panel progress-circular-panel center-items bg-W animated fadeIn">
+				         		<md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+				        	</div>
+				        	<!-- mensajes de contenido -->
+				      		<div ng-if="projects.length >= 0 && !projectsProgramSelected || totalProjectsWeight <= 0 " class="no-content-msg"><i class="mdi mdi-information-outline"></i> [[projectsNoContentMsg]] </div>
+							<alert ng-if="createMessageProjects" type="danger" class="animated fadeInUp alert no-fixed" close="$parent.createMessageProjects = null">
+								<strong>
+								  <UL type = disk >
+								    <LI class="text-initial" ng-repeat="msg in createMessageProjects">[[msg]]
+								  </UL>
+								</strong>
+							</alert>
+							<!-- alerta de exito -->
+							<alert ng-if="createSuccessProjects" class="animated fadeInUp alert no-fixed" type="success" close="$parent.createSuccessProjects = null">
+								[[createSuccessProjects]]
+							</alert>			      		
+							<div class="col-xs-12" ng-if="!projectsNoContentMsg || (projectsProgramSelected && totalProjectsWeight > 0)">
+							        <div class="form-group col-xs-12 col-md-6">
+							        	<label>Nombre del proyecto</label>
+							          	<input ng-model="projectForm.name" type="text" ng-change="$parent.detectChangesProject = true" class="form-control white" id="name" placeholder="Nombre del proyecto">
+							        </div>
+							        <div class="form-group col-xs-12 col-md-6">
+							        	<label>Descripción del proyecto</label>
+							          	<input ng-model="projectForm.description" type="text" ng-change="$parent.detectChangesProject = true" class="form-control white" id="description" placeholder="Descripcíon del proyecto">
+							        </div>
+							        <div class="form-group col-xs-12 col-md-6">
+							        	<label>Dependencia del proyecto</label>
+							        	<select class="form-control white" id="dependence" ng-options="dependence.id as dependence.name for dependence in $parent.dependences" ng-change="$parent.detectChangesProject = true" ng-model="$parent.projectForm.dependence">
+							        		<option value="">Seleccione una dependencia administrativa</option> 
+									    </select>
+							        </div>
+							        <div class="form-group col-xs-12 col-md-6">
+							        	<label>Presupuesto del proyecto</label>
+							          	<input ng-model="projectForm.budget" type="text" ng-change="$parent.detectChangesProject = true" class="form-control white" id="description" placeholder="Presupuesto del proyecto">
+							        </div>
+							        <div class="form-group col-xs-12">
+							        	<label class="fc-silver">Peso del proyecto: [[projectForm.weight]]%</label>
+							        	<md-slider flex class="md-primary" md-discrete ng-model="$parent.projectForm.weight" step="1" min="0" max="[[totalProjectsWeight]]" ng-change="$parent.detectChangesProject = true" aria-label="rating">
+	     								 </md-slider>
+							        </div>
+							        <div class="form-group col-xs-12">
+							        	<label class="fc-silver">Ejecucíon del proyecto: [[projectForm.name]] - <span class="label label-success">Unidad de medida estandar %</span></label>
+							        	<md-content class="md-padding bg-transparent">
+										  <md-tabs md-selected="0" md-border-bottom md-autoselect class="tabs-normal-justify">
+										    <md-tab 
+										            label="AÑO 1">
+										      		<input ng-model="projectForm.year1" type="text" ng-change="$parent.detectChangesProject = true" class="form-control white margin-t-15" id="description" placeholder="Ejecución año 1">
+										    </md-tab>
+										    <md-tab 
+										            label="AÑO 2">
+										      		<input ng-model="projectForm.year2" type="text" ng-change="$parent.detectChangesProject = true" class="form-control white margin-t-15" id="description" placeholder="Ejecución año 2">
+										    </md-tab>
+										    <md-tab 
+										            label="AÑO 3">
+										      		<input ng-model="projectForm.year3" type="text" ng-change="$parent.detectChangesProject = true" class="form-control white margin-t-15" id="description" placeholder="Ejecución año 3">
+										    </md-tab>
+										    <md-tab 
+										            label="AÑO 4">
+										      		<input ng-model="projectForm.year4" type="text" ng-change="$parent.detectChangesProject = true" class="form-control white margin-t-15" id="description" placeholder="Ejecución año 4">
+										    </md-tab>
+										  </md-tabs>
+										</md-content>
+									</div>				     
+						        <div class="wid-100 center-items">
+							        <div  class="col-md-8 col-sm-12 col-xs-12 center-items no-padding-xs margin-t-b-5" ng-click="createProjects(projectsProgramSelected)">
+							          <button class="wid-100 btn btn-lg btn-primary color-3 fs-xs-30">Crear proyecto</button>
+							        </div>
+						        </div>
+				        	</div>
+				    	</div>					      
+				   </form>
+			   	</div>
+		    </md-tab>
+		    <md-tab label="Editar Proyectos">
+		    	 <!-- fomrulario creacion de Proyectos -->
+				<div  class="content-container-inner">
+				    <form class="wid-100 pos-relative">
+				        <!-- encabezado de formulario -->
+				        <div class="form-header bg-3">
+					        <h4 class="fc-W text-initial margin-t-b-5">Editar proyecto: [[projectForm.name ? projectForm.name :'' ]] [[ProjectsLineSelected.name ? 'en ' + ProjectsLineSelected.name :'' ]] </h4>
+					        <h5 class="fc-W hidden-xs text-initial margin-t-b-5">Por favor ingrese la siguiente información</h5>
+				        </div>
+				      	<div class="form-body pos-relative inline-b">
+					        <!-- barra de progreso circular -->
+					        <div ng-if="waitCreateProject" class="animate-if-panel progress-circular-panel center-items bg-W opacity-05">
+					          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+					        </div>
+				      		<!-- barra de progreso circular -->
+					        <div  ng-if="waitLoadAreas || waitLoadProjects" class="animate-if-panel progress-circular-panel center-items bg-W animated fadeIn">
+					          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+					        </div>	
+				      		<!-- alertas de error -->
+							<alert ng-if="createMessageProjects" type="danger" class="animated fadeInUp alert no-fixed" close="$parent.createMessageProjects = null">
+								<strong>
+								  <UL type = disk >
+								    <LI class="text-initial" ng-repeat="msg in createMessageProjects">[[msg]]
+								  </UL>
+								</strong>
+							</alert>
+							<!-- alerta de exito -->
+							<alert ng-if="createSuccessProjects" class="animated fadeInUp alert no-fixed" type="success" close="$parent.createSuccessProjects = null">
+								[[createSuccessProjects]]
+							</alert>			      		
+							<div class="col-xs-12">
+						        <div class="form-group col-xs-12 col-md-6">
+						        	<label>Nombre del proyecto</label>
+						          	<input ng-model="projectForm.name" type="text" ng-change="$parent.detectChangesProject = true" class="form-control white" id="name" placeholder="Nombre del proyecto">
+						        </div>
+						        <div class="form-group col-xs-12 col-md-6">
+						        	<label>Descripción del proyecto</label>
+						          	<input ng-model="projectForm.description" type="text" ng-change="$parent.detectChangesProject = true" class="form-control white" id="description" placeholder="Descripcíon del proyecto">
+						        </div>
+						        <div class="form-group col-xs-12 col-md-6">
+						        	<label>Dependencia del proyecto</label>
+						        	<select class="form-control white" id="dependence" ng-options="dependence.id as dependence.name for dependence in $parent.dependences" ng-change="$parent.detectChangesProject = true" ng-model="$parent.projectForm.dependence">
+								    </select>
+						        </div>
+						        <div class="form-group col-xs-12 col-md-6">
+						        	<label>Programa del proyecto</label>
+								    <select  id="typeHeadPrograms" type="text" ng-model="$parent.projectForm.program" ng-change="$parent.detectChangesProject = true" placeholder="Buscar programas por area" ng-options="program.id as program.name for program in $parent.projectsProgramsInArea" class="form-control white"></select>
+								   <!--  <select autocomplete="off" id="typeHeadPrograms"type="text" ng-model="$parent.projectForm.program" ng-change="projectsLoadProgramsForArea($viewValue);$parent.detectChangesProject = true" placeholder="Buscar programas por area" typeahead="program.id as program.name for program in $parent.projectsProgramsInArea | filter:{name:$viewValue} | limitTo: 20" typeahead-loading="projectLoadingPrograms" class="form-control white"></select> -->
+						        </div>
+						        <div class="form-group col-xs-12 col-md-6">
+						        	<label>Presupuesto del proyecto</label>
+						          	<input ng-model="projectForm.budget" type="text" ng-change="$parent.detectChangesProject = true" class="form-control white" id="description" placeholder="Presupuesto del proyecto">
+						        </div>
+						        <div class="form-group col-xs-12 col-md-6">
+						        	<label class="fc-silver">Peso del proyecto: [[projectForm.weight]]%</label>
+						        	<md-slider ng-if="totalProjectsWeightEdit" flex class="md-primary" md-discrete ng-model="$parent.projectForm.weight" step="1" min="0" max="[[totalProjectsWeightEdit]]" ng-change="$parent.detectChangesProject = true" aria-label="rating">
+     								 </md-slider>
+						        </div>
+						        <div class="form-group col-xs-12">
+						        	<label class="fc-silver">Ejecucíon del proyecto: [[projectForm.name]] - <span class="label label-success">Unidad de medida estandar %</span></label>
+						        	<md-content class="md-padding bg-transparent">
+									  <md-tabs md-selected="0" md-border-bottom md-autoselect class="tabs-normal-justify">
+									    <md-tab 
+									            label="AÑO 1">
+									      		<input ng-model="projectForm.year1" type="text" ng-change="$parent.detectChangesProject = true" class="form-control white margin-t-15" id="description" placeholder="Ejecución año 1">
+									    </md-tab>
+									    <md-tab 
+									            label="AÑO 2">
+									      		<input ng-model="projectForm.year2" type="text" ng-change="$parent.detectChangesProject = true" class="form-control white margin-t-15" id="description" placeholder="Ejecución año 2">
+									    </md-tab>
+									    <md-tab 
+									            label="AÑO 3">
+									      		<input ng-model="projectForm.year3" type="text" ng-change="$parent.detectChangesProject = true" class="form-control white margin-t-15" id="description" placeholder="Ejecución año 3">
+									    </md-tab>
+									    <md-tab 
+									            label="AÑO 4">
+									      		<input ng-model="projectForm.year4" type="text" ng-change="$parent.detectChangesProject = true" class="form-control white margin-t-15" id="description" placeholder="Ejecución año 4">
+									    </md-tab>
+									  </md-tabs>
+									</md-content>
+								</div>				     
+						        <div class="wid-100">
+							        <div  class="col-md-6 col-sm-6 col-xs-12 center-items no-padding-xs" >
+							          <button class="wid-100 btn btn-lg btn-primary color-3 fs-xs-30" ng-click="editProjects($parent.projectsProgramSelected)" ng-disabled="!$parent.detectChangesProject" >Guardar cambios</button>
+							        </div>
+							        <div  class="col-md-6 col-sm-6 col-xs-12 center-items no-padding-xs" >
+							          <button class="wid-100 btn btn-lg btn-primary color-4 fs-xs-30" ng-click="cancelEditProject($parent.projectsProgramSelected);$parent.detectChangesProject = false">Cancelar</button>
+							        </div>
+						        </div>
+			       			</div>
+				    	</div>					      
+				   </form>
+			   	</div>
+		    </md-tab>      
+	    </md-tabs>
+	</div>
+</div>

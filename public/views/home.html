@@ -1,0 +1,126 @@
+<div class="inline-b wid-100 bg-blue min-full-height overflow-hidden">
+  <!-- tiempo de espera  -->
+  <div ng-if="check" class="full-height wid-100 center-items bg-blue">
+    <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+  </div>
+  <!-- barra superio decorativa -->
+  <div class="header-bar">
+    <div class="bg-4"></div>
+    <div class="bg-1"></div>
+    <div class="bg-3"></div>
+    <div class="bg-2"></div>
+  </div>
+<div ng-if="!check" class="icon-menu-container visible-xs">
+  <i class="mdi mdi-menu"></i>
+</div>
+<nav ng-if="!check" class="main-nav-bar hidden-xs">
+  <!-- texto superior -->
+  <div class="container-title">
+   <div class="container-inner">
+      <h3>Panel de administración Gedeón - Municipo de Ejemplo</h3>
+   </div>
+   <!-- Single dropdown -->
+    <div class="btn-group actual-user-container" dropdown is-open="status.isopen">
+      <div class="actual-user-text dropdown-toggle" dropdown-toggle>[[actualUser.user]]</div>
+      <ul class="dropdown-menu dropdown-menu-user" role="menu">
+        <li role="menuitem"><a href="#">Perfil</a></li>
+        <li role="menuitem"><a href="#">action</a></li>
+        <li role="menuitem"><a href="#">Another action</a></li>
+        <li class="divider"></li>
+        <li role="menuitem" class="cursor-pointer" ng-click="logOut()"><a >Cerrar session</a></li>
+      </ul>      
+    </div>
+  </div>
+  <!-- barra izquierda -->
+  <div class="container-left">
+    <div class="container-inner">
+      <!--boton menu home -->
+  		<div class="btn-container [[actualMenu == 'start' ? 'active':'']]" ng-click="goTo('/home/start')" tooltip-popup-delay='1000' uib-tooltip='Ir a inicio' tooltip-placement="top">
+        <div class="wid-100 center-items">
+          <i class="gdi gdi-home"></i>
+        </div>
+        <p>INICIO</p>
+      </div>
+      <!--boton menu proyectos -->
+      <div ng-repeat="p in projects" class="btn-container">
+        <div class="wid-100 center-items">
+          <i class="gdi gdi-pencil"></i>
+        </div>
+        <p>[[p.name]]</p>
+      </div>
+    </div>
+	</div>
+  <!-- barra central -->
+	<div class="container-center">
+    <div class="container-inner">
+      <!--boton menu informes -->
+      <div class="btn-container">
+        <div class="wid-100 center-items">
+          <i class="gdi gdi-info"></i>
+        </div>
+        <p>INFORMES</p>
+      </div>
+      <!--boton menu plan de desarrollo -->
+      <div class="btn-container container-dev [[actualMenu == 'dev' ? 'active':'']]">
+        <div class="wid-100 center-items">
+          <i class="gdi gdi-dev"></i>
+        </div>
+        <p>PLAN DE DESARROLLO</p>
+      </div>
+      <!--boton menu proyectos -->
+      <div class="btn-container [[$parent.actualMenu == 'projects' ? 'active':'']]" ng-click="goTo('/home/projects')">
+        <div class="wid-100 center-items">
+          <i class="gdi gdi-project"></i>
+        </div>
+        <p>PROYECTOS</p>
+      </div>
+        
+        <!-- <a><i class="gdi gdi-notification"></i></a>
+        <a><i class="gdi gdi-user"></i></a>
+        <a><i class="gdi gdi-config"></i></a>
+        <a><i class="gdi gdi-audit"></i></a> -->
+    </div>
+	</div>
+	<div class="container-right">
+    <div class="container-inner">
+      <!--boton menu notificaciones -->
+      <div class="btn-container">
+        <div class="wid-100 center-items">
+          <i class="gdi gdi-notification pos-relative">
+            <!-- circulo contador de notificaciones -->
+            <span ng-if="notificationCount" class="notification-count-container bounceIn animated [[notificationCount >= 100 ? 'big': '']]">[[notificationCount]]</span>
+          </i>
+        </div>
+        <p>NOTIFICACIONES</p>
+      </div>      
+      <!--boton menu auditoria -->
+      <div class="btn-container" class="btn-container [[$parent.actualMenu=='audit' ? 'active':'']]" ng-click="goTo('/home/audit')" >
+        <div class="wid-100 center-items">
+          <i class="gdi gdi-audit"></i>
+        </div>
+        <p>AUDITORIA</p>
+      </div>
+       <!--boton menu configuraciones -->
+      <div ng-if="actualUser.role==1|| actualUser.role==2 || actualUser.role==3"class="btn-container [[actualMenu == 'config' ? 'active':'']]" ng-click="goTo('/home/config')">
+        <div class="wid-100 center-items">
+          <i class="gdi gdi-config"></i>
+        </div>
+        <p>CONFIGURACION</p>
+      </div>
+      <!--boton menu notificaciones -->
+      <div ng-if="actualUser.role==1" class="btn-container [[$parent.actualMenu == 'users' ? 'active':'']]" ng-click="goTo('/home/users')">
+        <div class="wid-100 center-items">
+          <i class="gdi gdi-user"></i>
+        </div>
+        <p>USUARIOS</p>
+      </div>
+    </div>
+	</div>		
+</nav>
+
+<!-- multivista -->
+  <article ng-show="loadOK"  class="wid-100">
+    <div ui-view class=""></div>
+  </article>
+
+</div> <!-- /container -->

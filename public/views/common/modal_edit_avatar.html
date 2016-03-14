@@ -1,0 +1,73 @@
+<!-- Modal -->
+<div class="modal-header">
+    <h3 class="modal-title">Seleccione una foto.</h3>
+</div>
+<div class="modal-body inline-b wid-100">
+  <alert ng-if="errorMessage" type="danger" class="animated fadeInUp alert" close="$parent.errorMessage = null">
+  <strong>
+    <UL type = disk >
+      <LI class="text-initial" ng-repeat="msg in errorMessage">[[msg]]
+    </UL>
+  </strong>
+</alert>
+  <div class="col-md-12 center-items padding-b0">
+    <div ng-show="!myImage" class="browse-wrap-crop">
+      <div class="title-crop">Selecciona o arrastra tu archivo: </div>
+      <input class="image-crop-input" type="file" fileread="myImage" id="fileInput" />
+    </div>
+    <div ng-show="myImage && imageCropStep==2" class="cropArea">
+      <img-crop 
+            image="myImage" 
+            result-image="imageCropResult"
+            area-type="[[imgFrame]]"
+            on-load-done="imageCropStep=2"
+            result-image-format="jpg"
+            result-image-size='[[maxWidth ? maxWidth : {w: auto,h: auto}]]'
+      ></img-crop>
+    </div>
+    <div class="[[imageCropStep==3 ? '': 'hiden-absolute' ]] wid-70">
+          <div class="wid-100 center-items">
+            <img class="margin-b-30" ng-src="[[imageCropResult]]" alt="Imagen recortada">
+          </div>
+          <div class="wid-100 center-items margin-small">
+            <div class="wid-50 center-items">
+              <a class="link-primary cursor-pointer" ng-mouseover="changeAvatar = true" ng-mouseleave="changeAvatar = false" ng-click="imageCropStep=2"><i class="fs-15 mdi mdi-auto-fix"></i> Editar</a>
+            </div>
+            <div class="wid-50 center-items">
+              <a class="link-primary cursor-pointer" ng-mouseover="changeAvatar = true" ng-mouseleave="changeAvatar = false" ng-click="imageCropResult=null;myImage=null;imageCropStep=1"><i class="fs-15 mdi mdi-reload"></i> Seleccionar otro archivo</a>
+            </div>
+          </div>
+          <!-- <div class="wid-100 margin-small center-items">
+            <div class="col-md-6 center-items">
+              <button class="btn btn-warning" type="button" ng-click="imageCropStep=2">Editar</button>
+            </div>
+            <div class="col-md-6 center-items">
+              <button class="btn btn-warning" type="button" ng-click="imageCropResult=null;myImage=null;imageCropStep=1">Seleccionar otro archivo</button>
+            </div>    
+          </div> -->
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  
+  <div ng-show="imageCropStep==2" class="col-lg-6 col-md-6 col-sm-12 col-xs-12 center-items margin-plus-10 padding-sm-10">
+    <button class="wid-100 btn btn-success fs-20" type="button" ng-click="imageCropStep=3">Ver vista previa</button>
+  </div>
+  <div ng-show="imageCropStep!=2" class="col-lg-6 col-md-6 col-sm-12 col-xs-12 center-items margin-plus-10 padding-sm-10">
+    <button ng-disabled="imageCropStep!=3"class="wid-100 btn btn-primary color-3 fs-20" ng-click="loadAvatar()">Guardar Imagen</button>
+  </div>
+  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 center-items margin-plus-10 padding-sm-10 ">
+    <button class="wid-100 btn btn-primary color-4 bd-4 fs-20 hover-bc-4" ng-click="cancel()">Cancelar</button>
+  </div>
+</div>
+<div ng-if="processing" class="animate-if-panel progress-circular-panel center-items bg-B opacity-05">
+  <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+</div>
+<style>
+    .cropArea {
+      background: #E4E4E4;
+      overflow: hidden;
+      width:100%;
+      height:350px;
+    }
+  </style>

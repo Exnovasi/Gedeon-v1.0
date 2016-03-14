@@ -1,0 +1,65 @@
+<div class="view-container center-items">
+  	<div class="wid-100">
+		<!-- listado de usuarios -->
+		<!-- fomrulario creacion de usuarios -->
+		<div  class="content-container-inner center-items">
+		    <form class="col-xs-12 col-md-8">
+		        <!-- barra de progreso circular -->
+		        <div ng-if="waitEditDevPlan" class="animate-if-panel progress-circular-panel center-items bg-W opacity-05">
+		          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+		        </div>
+		        <!-- encabezado de formulario -->
+		        <div class="form-header bg-3">
+		        	<div class="inline-b">
+			        	<h2 class="fc-W text-initial margin-t-b-5 center-items"><i class="fc-W fs-30 mdi mdi-settings"></i>  Configuracion plan de desarrollo</h2>
+		        		<h5 class="fc-W hidden-xs text-initial">Por favor ingrese la siguiente información</h5>
+		        	</div>
+		        </div>
+		      	<div class="form-body">
+		      		<!-- alertas de error -->
+					<alert ng-if="editDPMessage" type="danger" class="animated fadeInUp alert no-fixed" close="$parent.editDPMessage = null">
+						<strong>
+						  <UL type = disk >
+						    <LI class="text-initial" ng-repeat="msg in editDPMessage">[[msg]]
+						  </UL>
+						</strong>
+					</alert>
+					<!-- alerta de exito -->
+					<alert ng-if="editDPSuccess" class="animated fadeInUp alert no-fixed" type="success" close="$parent.editDPSuccess = null">
+						[[editDPSuccess]]
+					</alert>			      	
+		      		<!-- Avatar -->
+		      		<div class="col-xs-12">
+			      		<div class="form-group col-lg-12 col-sm-12 col-xs-12 center-items">
+						    <div class="pos-relative" ng-mouseover="changeAvatar = true" ng-mouseleave="changeAvatar = false">
+						    	<div ng-show="changeAvatar" class="cursor-pointer overlay-Primary center-items" ng-click="openModal()">
+									<div class="col-md-6">
+										<i class="fc-W fs-50 mdi mdi-file-image"></i>
+									</div>
+								</div>
+								<img class="img-responsive" ng-cloak src="[[devPlanForm.image]]" alt="imagen plan de desarrollo">
+							</div>
+						</div>
+						<div class="wid-100 center-items">
+							<a class="link-primary cursor-pointer" ng-mouseover="changeAvatar = true" ng-mouseleave="changeAvatar = false" ng-click="openModal()"><i class="fs-15 mdi mdi-camera"></i> Cargar imagen</a>
+						</div>
+						<!-- Avatar -->
+					</div>
+					<div class="col-xs-12 margin-top-medium">
+				        <div class="form-group col-xs-12">
+				          <input ng-model="devPlanForm.title" ng-change="$parent.detectChangesDP = true" type="text" class="form-control white" id="user" placeholder="Titulo">
+				        </div>
+				        <div class="form-group col-xs-12">
+				          <textarea ng-model="devPlanForm.description"  ng-change="$parent.detectChangesDP = true" rows="10" type="text" class="form-control white" id="email" placeholder="Descripcion"></textarea>
+				        </div>
+				        <div class="wid-100 center-items">
+					        <div  class="col-md-6 col-sm-12 col-xs-12 center-items no-padding-xs margin-t-b-5" ng-click="editDevPlan()">
+					          <button class="wid-100 btn btn-lg btn-primary color-3 fs-xs-30" ng-disabled="!$parent.detectChangesDP">Actualizar informacion</button>
+					        </div>
+				        </div>
+	       			 </div>
+		    	</div>		      
+		   </form>
+	   	</div>
+	</div>
+</div>

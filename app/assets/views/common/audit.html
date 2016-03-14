@@ -1,0 +1,62 @@
+<!-- tiempo de espera  -->
+<!-- <div ng-if="checkUrl" class="full-height wid-100 center-items bg-blue pos-relative">
+  <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+</div> -->
+<div class="view-container animated fadeIn">
+  <!-- alertas de error -->
+<alert ng-if="createUserMessage" type="danger" class="animated fadeInUp alert" close="$parent.createUserMessage = null">
+	<strong>
+	  <UL type = disk >
+	    <LI class="text-initial" ng-repeat="msg in createUserMessage">[[msg]]
+	  </UL>
+	</strong>
+</alert>
+<!-- alerta de exito -->
+<alert ng-if="createUserSuccess" class="animated fadeInUp alert" type="success" close="$parent.createUserSuccess = null">
+	[[createUserSuccess]]
+</alert>
+
+	<div class="col-xs-12 col-sm-12 col-md-12 margin-t-b-20-sm-down bg-blue">
+		<!-- listado de usuarios -->
+		<div class="content-container-inner animated fadeIn">
+	        <!-- barra de progreso circular -->
+	        <div ng-if="waitAuditLoad" class="animate-if-panel progress-circular-panel center-items bg-W opacity-05">
+	          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+	        </div>
+	        <!-- encabezado de listas -->
+	        <div class="form-header bg-3">
+		        <h4 class="fc-W margin-t-b-5">Auditorías</h4>
+		        <div class="col-xs-12 col-sm-4">
+		        	<select class="form-control white med-40" id="role" ng-options="user.id as user.name for user in usersLoad" ng-model="search.user" ng-change="reset(1)">
+				      <option value="">Seleccione un usuario</option> 
+				    </select>
+		        </div>
+		        <div class="col-xs-12 col-sm-4">
+		        	<select class="form-control white med-40" id="role" ng-options="dependence.id as dependence.name for dependence in dependencesLoad" ng-model="search.dependence" ng-change="reset(2)">
+				      <option value="">Seleccione una dependencia</option> 
+				    </select>
+		        </div>
+		        <div class="col-xs-12 col-sm-4">
+		        	<select class="form-control white med-40" id="role" ng-options="project.id as project.name for project in projectsLoad" ng-model="search.project" ng-change="reset(3)">
+				      <option value="">Seleccione un proyecto</option> 
+				    </select>
+		        </div>
+	        </div>
+	      	<div class="form-body no-padding-l-r panel-scroll-vertical-600-no-padding">
+	      		<!-- lista de todos los usuarios existentes -->
+	      		<div ng-if="audits.length < 1" class="no-content-msg">
+	      			<i class="mdi mdi-information-outline"></i> 
+	      			No hay movimientos en el momento
+	      		</div>
+	      		<div
+	      			ng-repeat="data in audits | orderBy:'-date' | filter:search"
+	      			class="alert alert-[[data.type]]" 
+	      			style="position: inherit;margin-top: 0;margin: 0 5%;margin-bottom: 1%;" 
+	      			role="alert"
+	      			>
+      				[[data.msg]]
+    			</div>
+	    	</div>
+		</div>
+	</div>
+</div>

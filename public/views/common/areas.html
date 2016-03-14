@@ -1,0 +1,199 @@
+<div class="view-container padding-t-20">
+  	<div class="col-xs-12 col-sm-12 col-md-6 margin-t-b-20-sm-down">
+		<!-- listado de usuarios -->
+		<div class="content-container-inner animated fadeIn">
+	        <!-- barra de progreso circular -->
+	        <div ng-if="waitLoadAreas" class="animate-if-panel progress-circular-panel center-items bg-W">
+	          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+	        </div>
+	        <!-- encabezado de listas -->
+	        <div class="form-header bg-3">
+	        	<div class="col-xs-12 col-sm-6">
+		        	<h4 class="fc-W margin-t-b-5">Áreas creadas</h4>
+	        	</div>
+		        <div class="col-xs-12 col-sm-6">
+		        	<select class="form-control white med-40" id="role" ng-options="area.name for area in lines" ng-model="$parent.lineSelected" ng-change="$parent.loadAreasForLine(lineSelected)">
+				      <option value="">Seleccione una línea</option> <!-- not selected / blank option -->
+				     <!--  <option ng-repeat="area in lines" value="[[area.id]]">[[area.name]]</option> --> <!-- interpolation -->
+				    </select>
+		        </div>
+	        </div>
+	      	<div class="form-body no-padding-l-r panel-scroll-vertical-600-no-padding">
+	      		<!-- lista de todos las Áreas existentes -->
+	      		<div ng-if="areas.length < 1 && lineSelected" class="no-content-msg"><i class="mdi mdi-information-outline"></i> En "[[lineSelected.name]]" No hay ninguna área creada</div>
+	      		<div ng-if="!lineSelected" class="no-content-msg"><i class="mdi mdi-information-outline"></i> Por favor seleccione una línea</div>
+	      		<div ng-repeat="area in areas" class="card-user-container">
+	      			<!-- popUp confirmar -->
+			        <div ng-if="waitConfirmDeleteArea == area" class="animated zoomInUp popup-delete-user">
+			        	<!-- barra de progreso circular -->
+				        <div ng-if="waitDeleteArea" class="animate-if-panel progress-circular-panel center-items bg-W opacity-05">
+				          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+				        </div>
+			        	<div class="container-inner">
+			        		<p class="popup-text"><i class="mdi mdi-alert"></i> [[popupTextArea]]
+			        			<button type="button" class="close" ng-click="closeWaitDeleteArea(area)" tabindex="0" aria-hidden="false">
+							        <span aria-hidden="true">×</span>
+							        <span class="sr-only">Close</span>
+							    </button>
+			        		</p>
+				          	<div ng-if="!reassignPrograms" class="form-group col-xs-6">
+						        <input ng-model="area.deletePassword" type="password" class="form-control white" id="deletePassword2" placeholder="Password">
+					        </div>
+					        <div ng-if="reassignPrograms" class="form-group col-xs-6">
+					        	<select class="form-control white" id="role" ng-model="area.reassignAreaId">
+							      <option value="">Reasignar indicador(es) a otra área</option> <!-- not selected / blank option -->
+							      <option ng-repeat="opt in areasAux" value="[[opt.id]]">[[opt.name]]</option> <!-- interpolation -->
+							    </select>
+					        </div>
+					        <div  class="form-group col-xs-6">
+						       <button class="wid-100 btn btn-lg btn-primary color-4 fs-xs-30" ng-disabled="!area.deletePassword && area.reassignAreaId == null" ng-click="deleteArea(area)">[[reassignPrograms ? 'Reasignar indicador(es)' :'Eliminar área' ]]</button>
+					        </div>
+			        	</div>
+				        <div class="overlay"></div>
+			        </div>
+			        <!-- popUp confirmar -->
+	      			<div class="col-xs-12">
+	      				<div class="users-info-panel">
+	      					<div class="col-xs-3 col-sm-2">
+	      						<div class="lines-weight-container">
+	      							[[area.weight]]%
+	      						</div>
+	      					</div>
+	      					<div class="col-xs-9 col-sm-10">
+			      				<h3 class="no-margin fc-3">[[area.name]]</h3>
+			      				<p class="fc-silver no-margin"><i class="mdi mdi-crosshairs-gps fc-success"></i> [[area.objective]]</p>
+	      					</div>
+	      				</div>
+	      				<div class="actions-users">
+	      					<div class="actions-users-button btn btn-default" ng-click="confirmDeleteArea(area)" tooltip-popup-delay='1000' tooltip='Eliminar' tooltip-placement="left">
+	      						<i class="mdi mdi-delete"></i>	
+	      					</div>
+	      					<div class="actions-users-button btn btn-default" ng-click="loadAreaForm(area);changeDataBind('detectChangesArea','false')" tooltip-popup-delay='1000' tooltip='Editar' tooltip-placement="left">
+	      						<i class="mdi mdi-border-color"></i>
+	      					</div>
+	      				</div>
+	      			</div>
+	      		</div>	       
+	    	</div>
+		</div>
+	</div>
+	<div class="col-xs-12 col-sm-12 col-md-6 margin-t-b-20-sm-down">
+	    <md-tabs  md-selected="selectedTabAreas" md-border-bottom md-autoselect class="tabs-config menu-hidden">
+		    <md-tab label="Crear Areaas">
+		        <!-- fomrulario creacion de Areaas -->
+				<div  class="content-container-inner">
+				    <form class="wid-100" name="areasForm">
+				        <!-- barra de progreso circular -->
+				        <div ng-if="waitLoadAreas" class="animate-if-panel progress-circular-panel center-items bg-W animated fadeIn">
+				          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+				        </div>
+				        <div ng-if="waitCreateArea" class="animate-if-panel progress-circular-panel center-items bg-W opacity-05">
+				          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+				        </div>
+				        <!-- encabezado de formulario -->
+				        <div class="form-header bg-3">
+					        <h4 class="fc-W text-initial margin-t-b-5">Crear área [[lineSelected.name ? 'en ' + lineSelected.name :'' ]]</h4>
+					        <h5 class="fc-W hidden-xs text-initial margin-t-b-5">Por favor ingrese la siguiente información</h5>
+				        </div>
+				      	<div class="form-body">
+				      		<div ng-if="!lineSelected" class="no-content-msg"><i class="mdi mdi-information-outline"></i> Por favor seleccione una línea</div>	
+				      		<div ng-if="totalAreasWeight == 0 && lineSelected" class="no-content-msg"><i class="mdi mdi-information-outline"></i> Ya completo el 100% de la línea "[[lineSelected.name]]"</div>
+				      		<!-- alertas de error -->
+							<alert ng-if="createMessageAreas" type="danger" class="animated fadeInUp alert no-fixed" close="$parent.createMessageAreas = null">
+								<strong>
+								  <UL type = disk >
+								    <LI class="text-initial" ng-repeat="msg in createMessageAreas">[[msg]]
+								  </UL>
+								</strong>
+							</alert>
+							<!-- alerta de exito -->
+							<alert ng-if="createSuccessAreas" class="animated fadeInUp alert no-fixed" type="success" close="$parent.createSuccessAreas = null">
+								[[createSuccessAreas]]
+							</alert>			      		
+							<div class="col-xs-12" ng-if="totalAreasWeight > 0 && lineSelected">
+						        <div class="form-group col-xs-12 col-md-6">
+									<label class="fc-silver">Nombre del área</label>
+						          	<input ng-model="areaForm.name" type="text" class="form-control white" id="name" placeholder="Nombre del área">
+						        </div>
+						        <div class="form-group col-xs-12 col-md-6">
+						        	<label class="fc-silver">Objetivo del área</label>
+						          <input ng-model="areaForm.objective" type="text" class="form-control white" id="objective" placeholder="Objetivo del área">
+						        </div>
+						        <div class="form-group col-xs-12">
+						        	<label  class="fc-silver">Peso del área: [[areaForm.weight]]%</label>
+						        	<md-slider ng-if="totalAreasWeight" flex class="md-primary" md-discrete ng-model="$parent.areaForm.weight" step="1" min="0" max="[[totalAreasWeight]]" ng-disabled="totalAreasWeight == 0" aria-label="rating">
+     								 </md-slider>
+						          <!-- <input ng-model="AreaForm.weight" type="text" class="form-control white" id="user" placeholder="Peso de la Areaa"> -->
+						        </div>									        
+						        <div class="wid-100 center-items">
+							        <div  class="col-md-8 col-sm-12 col-xs-12 center-items no-padding-xs margin-t-b-5" ng-click="createArea(lineSelected.id)">
+							          <button class="wid-100 btn btn-lg btn-primary color-3 fs-xs-30">Crear área</button>
+							        </div>
+						        </div>
+			       			 </div>
+				    	</div>					      
+				   </form>
+			   	</div>
+		    </md-tab>
+		    <md-tab label="Editar Areaas">
+		    	 <!-- fomrulario creacion de Areaas -->
+				<div  class="content-container-inner">
+				    <form class="wid-100">
+				        <!-- barra de progreso circular -->
+				        <div ng-if="waitLoadAreas" class="animate-if-panel progress-circular-panel center-items bg-W">
+				          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+				        </div>
+				        <div ng-if="waitCreateArea" class="animate-if-panel progress-circular-panel center-items bg-W opacity-05">
+				          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+				        </div>
+				        <!-- encabezado de formulario -->
+				        <div class="form-header bg-3">
+					        <h4 class="fc-W text-initial margin-t-b-5">Editar área: [[areaForm.name ? areaForm.name :'' ]] [[lineSelected.name ? 'en ' + lineSelected.name :'' ]] </h4>
+					        <h5 class="fc-W hidden-xs text-initial margin-t-b-5">Por favor ingrese la siguiente información</h5>
+				        </div>
+				      	<div class="form-body">	
+				      		<!-- alertas de error -->
+							<alert ng-if="createMessageAreas" type="danger" class="animated fadeInUp alert no-fixed" close="$parent.createMessageAreas = null">
+								<strong>
+								  <UL type = disk >
+								    <LI class="text-initial" ng-repeat="msg in createMessageAreas">[[msg]]
+								  </UL>
+								</strong>
+							</alert>
+							<!-- alerta de exito -->
+							<alert ng-if="createSuccessAreas" class="animated fadeInUp alert no-fixed" type="success" close="$parent.createSuccessAreas = null">
+								[[createSuccessAreas]]
+							</alert>			      		
+							<div class="col-xs-12">
+						        <div class="form-group col-xs-12 col-md-6">
+						          <input ng-model="areaForm.name" type="text" ng-change="$parent.detectChangesArea = true" class="form-control white" id="name" placeholder="Nombre de la Areaa">
+						        </div>
+						        <div class="form-group col-xs-12 col-md-6">
+						          <input ng-model="areaForm.objective" type="text" ng-change="$parent.detectChangesArea = true" class="form-control white" id="objective" placeholder="Objetivo de la Area">
+						        </div>
+						        <div class="form-group col-xs-12 col-md-12">
+						        	<select class="form-control white" id="line" ng-options="line.id as line.name for line in $parent.lines" ng-change="changeDataBind('detectChangesArea','true');changeDataBind('detectChangesArea','true')" ng-model="$parent.areaForm.line">
+								    </select>
+						        </div>
+						        <div class="form-group col-xs-12">
+						        	<label class="fc-silver">Peso del Área: [[$parent.areaForm.weight]]%</label>
+						        	<md-slider ng-if="viewDataBind('totalAreasWeightEdit') >= 0" id="totalAreasWeightEdit33" flex class="md-primary" md-discrete ng-model="$parent.areaForm.weight" ng-change="changeDataBind('detectChangesArea','true')" step="1" min="0" max="[[viewDataBind('totalAreasWeightEdit')]]" aria-label="rating">
+     								 </md-slider>
+						          <!-- <input ng-model="AreaForm.weight" type="text" class="form-control white" id="user" placeholder="Peso de la Area"> -->
+						        </div>					     
+						        <div class="wid-100">
+							        <div  class="col-md-6 col-sm-6 col-xs-12 center-items no-padding-xs" >
+							          <button class="wid-100 btn btn-lg btn-primary color-3 fs-xs-30" ng-click="editAreas()" ng-disabled="!$parent.detectChangesArea" >Guardar cambios</button>
+							        </div>
+							        <div  class="col-md-6 col-sm-6 col-xs-12 center-items no-padding-xs" >
+							          <button class="wid-100 btn btn-lg btn-primary color-4 fs-xs-30" ng-click="cancelEditArea();changeDataBind('detectChangesArea','false')">Cancelar</button>
+							        </div>
+						        </div>
+			       			 </div>
+				    	</div>					      
+				   </form>
+			   	</div>
+		    </md-tab>      
+	    </md-tabs>
+	</div>
+</div>

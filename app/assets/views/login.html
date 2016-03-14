@@ -1,0 +1,69 @@
+<div class="inline-b wid-100 bg-blue full-height overflow-hidden">
+  <!-- alertas de error -->
+  <div ng-if="sessionMessage" ng-repeat="msg in sessionMessage" class="alert alert-danger animated fadeInUp delay-[[$index]]" style="top:[[60*$index]]px;" role="alert">
+      <i class="mdi mdi-alert-circle"></i>
+      [[msg]]
+  </div>
+  <!-- tiempo de espera  -->
+  <div ng-show="check" class="full-height wid-100 center-items bg-blue">
+    <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+  </div>
+
+  <!-- barra superio decorativa -->
+  <div class="header-bar">
+    <div class="bg-4"></div>
+    <div class="bg-1"></div>
+    <div class="bg-3"></div>
+    <div class="bg-2"></div>
+  </div>
+
+  <!-- logo y disositivos moviles -->
+  <article ng-hide="check"  class="col-xs-12 col-sm-6 col-lg-6 animated fadeInLeft">
+    <div class="center-items">
+      <div class="col-xs-6 col-sm-6 col-lg-6">
+        <img class="img-responsive" src="img/Gedeon-Logo.png" alt="logo Gedeón">
+      </div>
+    </div>
+    <div class="center-items hidden-xs">
+      <div class="col-xs-12 col-lg-6">
+        <!-- <img class="img-responsive" src="../img/Devices.png"> -->
+        <div class="col-xs-12 center-items">
+          <div class="padding-t-b-30">
+            <i class="pointer mdi mdi-desktop-mac fc-blue fs-70"></i>
+            <i class="pointer mdi mdi-laptop-mac fc-blue fs-50"></i>
+            <i class="pointer mdi mdi-tablet-ipad fc-blue fs-30"></i>
+          </div>
+
+        </div>
+        <h3 class="center-text fc-blue">Ahora disponible para todos los dispositivos</h3>
+      </div>
+    </div>
+  </article>
+  <!-- Formulari de login -->
+  <article ng-hide="check"  class="col-xs-12 col-sm-6 col-lg-6 center-items height-100-sm-up animated fadeInRight">
+    <form class="form-login">
+        <!-- barra de progreso circular -->
+        <div ng-if="wait" class="animate-if-panel progress-circular-panel center-items bg-W opacity-05">
+          <md-progress-circular  md-mode="indeterminate"></md-progress-circular>
+        </div>
+      <div class="right bg-W">
+        <h2 class="form-login-heading">Iniciar sesión</h2>
+        <h4 class="fc-silver hidden-xs">Por favor ingrese la siguiente información</h4>
+        <div class="form-group position-relative wid-100">
+          <input ng-model="loginForm.user" type="text" class="form-control white" id="user" placeholder="Usuario">
+        </div>
+        <div  class="form-group position-relative wid-100">
+          <input ng-model="loginForm.password" type="password" class="form-control white" id="password" placeholder="Password">
+        </div>
+    </button>
+      </div>
+      <div class="left bg-coral">
+        <i class="pointer mdi mdi-account-outline opacity-01 icon-user-login"></i>
+        <div  class="col-lg-12 col-md-12 col-sm-12 col-xs-12 center-items no-padding-xs" ng-click="login()">
+          <button class="wid-100 btn btn-lg btn-primary dark fs-xs-30">INICIAR</button>
+        </div>
+      </div>
+    </form>
+  </article>
+
+</div> <!-- /container -->
